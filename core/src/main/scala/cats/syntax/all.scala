@@ -3,6 +3,7 @@ package syntax
 
 trait AllSyntax
     extends ApplySyntax
+    with ArrowSyntax
     with BifunctorSyntax
     with CoflatMapSyntax
     with ComonadSyntax

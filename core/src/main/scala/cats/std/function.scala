@@ -2,6 +2,7 @@ package cats
 package std
 
 import algebra.Eq
+import cats.{ FlatMap, Run }
 import cats.arrow.{Arrow, Choice}
 import cats.data.Xor
 import cats.functor.Contravariant
@@ -48,8 +49,10 @@ trait Function1Instances {
         f.compose(fa)
     }
 
-  implicit val function1Instance: Choice[Function1] with Arrow[Function1] =
-    new Choice[Function1] with Arrow[Function1] {
+  implicit def function1Instance(implicit ev: FlatMap[Id]): Choice[Function1] with Arrow[Function1] with Run[Function1, Id] =
+    new Choice[Function1] with Arrow[Function1] with Run[Function1, Id] {
+      def F: FlatMap[Id] = ev
+
       def choice[A, B, C](f: A => C, g: B => C): Xor[A, B] => C =
         _ match {
           case Xor.Left(a) => f(a)
@@ -69,6 +72,8 @@ trait Function1Instances {
       }
 
       def compose[A, B, C](f: B => C, g: A => B): A => C = f.compose(g)
+
+      def run[A, B](f: A => B)(a: A) = f(a)
     }
 
   implicit def function1Monoid[A,B](implicit B: Monoid[B]): Monoid[A => B] =

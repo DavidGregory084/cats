@@ -185,4 +185,22 @@ class SyntaxTests extends AllInstances with AllSyntax {
     val fz4: F[Z] = (fa |@| fb |@| fc).map(f2)
     val fz5: F[Z] = (fa |@| fb |@| fc).ap(ff2)
   }
+
+  def testArrowFor[A, B, C]: Unit = {
+    val fab = mock[A => B]
+    val fbc = mock[B => C]
+
+    val fac = (a: A) => for {
+      b <- fab -< a
+      c <- fbc -< b
+    } yield c
+
+    // val kab = mock[Kleisli[F, A, B]]
+    // val kbc = mock[Kleisli[F, B, C]]
+
+    // val kac = (a: A) => for {
+    //   b <- kab -< a
+    //   c <- kbc -< b
+    // } yield c
+  }
 }

@@ -1,6 +1,7 @@
 package cats
 package data
 
+import cats.Run
 import cats.arrow.{Arrow, Choice, Split}
 import cats.functor.{Contravariant, Strong}
 
@@ -89,10 +90,13 @@ private[data] sealed abstract class KleisliInstances extends KleisliInstances0 {
   implicit val kleisliIdMonoidK: MonoidK[Lambda[A => Kleisli[Id, A, A]]] =
     kleisliMonoidK[Id]
 
-  implicit def kleisliArrow[F[_]](implicit ev: Monad[F]): Arrow[Kleisli[F, ?, ?]] =
-    new KleisliArrow[F] { def F: Monad[F] = ev }
+  implicit def kleisliArrow[F[_]](implicit ev: Monad[F]): Arrow[Kleisli[F, ?, ?]] with Run[Kleisli[F, ?, ?], F] =
+    new KleisliArrow[F] with Run[Kleisli[F, ?, ?], F] {
+      def F: Monad[F] = ev
+      def run[A, B](fab: Kleisli[F, A, B])(a: A) = fab.run(a)
+    }
 
-  implicit val kleisliIdArrow: Arrow[Kleisli[Id, ?, ?]] =
+  implicit val kleisliIdArrow: Arrow[Kleisli[Id, ?, ?]] with Run[Kleisli[Id, ?, ?], Id] =
     kleisliArrow[Id]
 
   implicit def kleisliChoice[F[_]](implicit ev: Monad[F]): Choice[Kleisli[F, ?, ?]] =

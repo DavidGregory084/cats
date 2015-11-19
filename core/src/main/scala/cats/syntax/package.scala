@@ -3,6 +3,7 @@ package cats
 package object syntax {
   object all extends AllSyntax
   object apply extends ApplySyntax
+  object arrow extends ArrowSyntax
   object bifunctor extends BifunctorSyntax
   object coflatMap extends CoflatMapSyntax
   object comonad extends ComonadSyntax
