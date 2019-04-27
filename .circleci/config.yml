@@ -10,6 +10,7 @@ commands:
       scala_version:
         type: string
     steps:
+      - checkout
       - run: sbt ++<< parameters.scala_version >>! buildJVM bench/test
 
   run_js_tests:
@@ -17,6 +18,7 @@ commands:
       scala_version:
         type: string
     steps:
+      - checkout
       - run: sbt ++<< parameters.scala_version >>! validateJS && sbt ++<< parameters.scala_version >>! validateKernelJS && sbt ++<< parameters.scala_version >>! validateFreeJS
 
   check_bincompat:
@@ -24,6 +26,7 @@ commands:
       scala_version:
         type: string
     steps:
+      - checkout
       - run: sbt ++<< parameters.scala_version >>! validateBC
 
 jobs:
@@ -31,12 +34,14 @@ jobs:
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
+      - checkout
       - run: sbt scalastyle fmtCheck
 
   scalafix:
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
+      - checkout
       - run: cd scalafix && sbt tests/test
 
   bincompat_check:
@@ -55,6 +60,7 @@ jobs:
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
+      - checkout
       - run: sbt coverage buildJVM bench/test coverageReport
 
   test_all:
