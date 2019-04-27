@@ -88,5 +88,13 @@ workflows:
       - linting
       - scalafix
       - bincompat_check
-      - coverage
-      - test_all
+      - coverage:
+          requires: 
+            - linting
+            - scalafix
+            - bincompat_check
+      - test_all:
+          requires: 
+            - linting
+            - scalafix
+            - bincompat_check
