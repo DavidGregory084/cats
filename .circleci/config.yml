@@ -28,21 +28,18 @@ commands:
 
 jobs:
   linting:
-    description: "Check Scalastyle, Scalafmt and Bincompat"
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
       - run: sbt scalastyle fmtCheck
 
   scalafix:
-    description: "Run Scalafix tests"
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
       - run: cd scalafix && sbt tests/test
 
   bincompat_check:
-    description: "Check binary compatibility"
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     parallelism: 3
@@ -55,14 +52,12 @@ jobs:
           scala_version: *scala_version_213
 
   coverage:
-    description: "Check code coverage"
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     steps:
       - run: sbt coverage buildJVM bench/test coverageReport
 
   test_all:
-    description: "Run JVM and JS tests"
     docker:
       - image: openlaw/scala-builder:0.9.2-node
     parallelism: 6
