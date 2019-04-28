@@ -32,21 +32,21 @@ commands:
 jobs:
   linting:
     docker:
-      - image: openlaw/scala-builder:0.9.2-node
+      - image: dgregory084/cats-builder:0.1.0
     steps:
       - checkout
       - run: sbt scalastyle fmtCheck
 
   scalafix:
     docker:
-      - image: openlaw/scala-builder:0.9.2-node
+      - image: dgregory084/cats-builder:0.1.0
     steps:
       - checkout
       - run: cd scalafix && sbt tests/test
 
   bincompat_check:
     docker:
-      - image: openlaw/scala-builder:0.9.2-node
+      - image: dgregory084/cats-builder:0.1.0
     parallelism: 3
     steps:
       - check_bincompat:
@@ -58,14 +58,14 @@ jobs:
 
   coverage:
     docker:
-      - image: openlaw/scala-builder:0.9.2-node
+      - image: dgregory084/cats-builder:0.1.0
     steps:
       - checkout
       - run: sbt coverage buildJVM bench/test coverageReport
 
   test_all:
     docker:
-      - image: openlaw/scala-builder:0.9.2-node
+      - image: dgregory084/cats-builder:0.1.0
     parallelism: 6
     steps:
       - run_jvm_tests:
