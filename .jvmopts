@@ -2,5 +2,7 @@
 -XX:ReservedCodeCacheSize=250M
 -XX:+TieredCompilation
 -XX:+UseParallelGC
+-XX:+PrintFlagsFinal
 -XX:+UnlockExperimentalVMOptions
 -XX:+UseCGroupMemoryLimitForHeap
+
