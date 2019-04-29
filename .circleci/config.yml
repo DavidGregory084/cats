@@ -4,6 +4,21 @@ scala_version_211: &scala_version_211 2.11.12
 scala_version_212: &scala_version_212 2.12.8
 scala_version_213: &scala_version_213 2.13.0-RC1
 
+cache_restore: &cache_restore
+  keys:
+    - sbt-deps-{{ .Branch }}-{{ checksum "build.sbt" }}
+    - sbt-deps-{{ .Branch }}-
+    - sbt-deps-
+
+cache_save: &cache_save
+  paths:
+    - ~/.coursier
+    - ~/.ivy2
+    - ~/.m2
+    - ~/.sbt
+    - ~/.cache
+  key: sbt-deps-{{ .Branch }}-{{ checksum "build.sbt" }}
+
 commands:
   run_jvm_tests:
     parameters:
@@ -11,7 +26,11 @@ commands:
         type: string
     steps:
       - checkout
+      - restore_cache:
+          <<: *cache_restore
       - run: sbt ++<< parameters.scala_version >>! buildJVM bench/test
+      - save_cache:
+          <<: *cache_save
 
   run_js_tests:
     parameters:
@@ -19,7 +38,11 @@ commands:
         type: string
     steps:
       - checkout
+      - restore_cache:
+          <<: *cache_restore
       - run: sbt ++<< parameters.scala_version >>! validateJS && sbt ++<< parameters.scala_version >>! validateKernelJS && sbt ++<< parameters.scala_version >>! validateFreeJS
+      - save_cache:
+          <<: *cache_save
 
   check_bincompat:
     parameters:
@@ -27,7 +50,11 @@ commands:
         type: string
     steps:
       - checkout
+      - restore_cache:
+          <<: *cache_restore
       - run: sbt ++<< parameters.scala_version >>! validateBC
+      - save_cache:
+          <<: *cache_save
 
 jobs:
   linting:
