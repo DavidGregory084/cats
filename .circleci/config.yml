@@ -6,9 +6,8 @@ scala_version_213: &scala_version_213 2.13.0-RC1
 
 cache_restore: &cache_restore
   keys:
-    - sbt-deps-{{ .Branch }}-{{ checksum "build.sbt" }}
-    - sbt-deps-{{ .Branch }}-
-    - sbt-deps-
+    - sbt-deps-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "build.sbt" }}
+    - sbt-deps-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}-
 
 cache_save: &cache_save
   paths:
@@ -17,7 +16,7 @@ cache_save: &cache_save
     - ~/.m2
     - ~/.sbt
     - ~/.cache
-  key: sbt-deps-{{ .Branch }}-{{ checksum "build.sbt" }}
+  key: sbt-deps-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "build.sbt" }}
 
 commands:
   run_jvm_tests:
